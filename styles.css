@@ -13,24 +13,7 @@ body {
     padding: 0 20px;
 }
 
-/* Hero 部分 */
-#hero {
-    height: 100vh;
-    background-image: url('img_file/IMG_8191.JPG');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-}
-
-#hero h1 {
-    font-size: 3rem;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-}
+/* 删除与 hero 相关的样式 */
 
 /* 关于我部分 */
 #about {
@@ -89,6 +72,11 @@ body {
     color: #333;
     margin: 10px 0;
     font-weight: bold;
+    text-decoration: none; /* 确保链接没有下划线 */
+}
+
+.social-account:hover {
+    color: #007bff; /* 鼠标悬停时改变颜色 */
 }
 
 /* 页脚 */
@@ -189,11 +177,11 @@ footer {
 /* 照片轮播样式 */
 #carousel {
     position: relative;
-    width: 80%; /* 减小宽度，使其不占满整个屏幕 */
-    max-width: 1000px; /* 设置最大宽度 */
+    width: 70%; /* 进一步减小宽度 */
+    max-width: 800px; /* 设置更小的最大宽度 */
     height: 0;
-    padding-bottom: 45%; /* 调整高度比例 */
-    margin: 40px auto; /* 添加上下边距并水平居中 */
+    padding-bottom: 40%; /* 调整高度比例 */
+    margin: 30px auto; /* 调整上下边距并水平居中 */
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0,0,0,0.1); /* 添加阴影效果 */
     border-radius: 10px; /* 添加圆角 */
@@ -323,4 +311,55 @@ footer {
 .chat-messages {
     display: flex;
     flex-direction: column;
+}
+
+/* 添加头像元素样式 */
+#fixed-avatar {
+    position: fixed; /* 固定位置 */
+    top: 20px; /* 距离顶部20px */
+    right: 20px; /* 距离右侧20px */
+    width: 80px; /* 头像宽度 */
+    height: 80px; /* 头像高度 */
+    border-radius: 50%; /* 圆形 */
+    overflow: hidden; /* 确保图片不会超出圆形边界 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+    z-index: 1000; /* 确保头像在其他元素之上 */
+}
+
+#fixed-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 确保图片填满圆形容器 */
+}
+
+/* 动画样式 */
+@keyframes slideLeft {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* 添加 hero 样式 */
+#hero {
+    position: relative;
+    height: 30vh; /* 将高度调整为30vh以缩小背景图片 */
+    background-image: url('img_file/IMG_8191.JPG');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+}
+
+.hero-content {
+    z-index: 2;
+    /* 移除半透明背景 */
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    padding: 20px;
+    border-radius: 10px;
 }

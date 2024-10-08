@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- 添加 hero 部分 -->
     <header id="hero">
         <div class="hero-content">
             <h1>Evan ZUO</h1>
@@ -42,18 +43,19 @@
             <div class="projects">
                 <div class="project-card">
                     <img src="img_file/agents_collaboration.png" alt="项目1">
-                    <h3>项目1</h3>
-                    <p>项目1的简短描述...</p>
+                    <h3>agents_collaboration</h3>
+                    <p>This script is designed to simulate an agent-based chat environment, specifically tailored for idea innovation generation tasks. Multiple agents interact according to specified roles and attributes, making it ideal for exploring and generating innovative ideas in a controlled setting.</p>
                 </div>
                 <div class="project-card">
                     <img src="img_file/autogen.png" alt="项目2">
-                    <h3>项目2</h3>
-                    <p>项目2的简短描述...</p>
+                    <h3>autogen</h3>
+                    <p>AutoGen is an open-source programming framework for building AI agents and facilitating cooperation among multiple agents to solve tasks. AutoGen aims to streamline the development and research of agentic AI, much like PyTorch does for Deep Learning. It offers features such as agents capable of interacting with each other, facilitates the use of various large language models (LLMs) and tool use support, autonomous and human-in-the-loop workflows, and multi-agent conversation patterns.
+                    </p>
                 </div>
                 <div class="project-card">
                     <img src="img_file/DPO_LLMEvaluate.png" alt="项目3">
-                    <h3>项目3</h3>
-                    <p>项目3的简短描述...</p>
+                    <h3>DPO_LLMEvaluate</h3>
+                    <p>Large-scale unsupervised language models (LMs) offer broad knowledge and reasoning capacities but lack precise behavioral control due to their unsupervised nature. Current fine-tuning methods with reinforcement learning from human feedback (RLHF) are complex and often unstable. In this report, we propose using Direct Preference Optimization (DPO), a stable, efficient, and performant algorithm, to train a compact LM that generates succinct, relevant, and context-aware dialogues. By simplifying the alignment of LMs with human preferences through a single stage of policy training, DPO eliminates the need for fitting a reward model or extensive hyperparameter tuning. The anticipated outcome of our study is to develop a conversational partner that ensures smooth, intuitive, and naturally-flowing dialogues, resonating with human conversational norms. The Experiment Result shows that GPT2-XL achieves similar performance with OPT1.3B after DPO process and Original GPT2-XL increase in accuracy 7.1 and overall score 10.3 post-DPO</p>
                 </div>
             </div>
         </div>
@@ -64,6 +66,8 @@
             <div class="social-info">
                 <p class="social-account">微信: ZYF_Ethan</p>
                 <p class="social-account">Instagram: zed_evan</p>
+                <!-- 添加 LinkedIn 链接 -->
+                <a href="https://www.linkedin.com/in/yifan-zuo-180294253/" target="_blank" class="social-account">LinkedIn: Yifan Zuo</a>
             </div>
         </div>
     </section>
@@ -86,6 +90,11 @@
             </div>
         </div>
     </div>
+
+    <!-- 添加固定头像，点击跳转到 LinkedIn -->
+    <a href="https://www.linkedin.com/in/yifan-zuo-180294253/" target="_blank" id="fixed-avatar">
+        <img src="img_file/IMG_8171.JPG" alt="固定头像">
+    </a>
 
     <script src="script.js"></script>
     <script src="chat.js"></script>

@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 const client = new OpenAI();
 
 // OpenAI API配置
-const OPENAI_API_KEY = 'OPENAI_API_KEY'; // 请替换为您的实际API密钥
+const OPENAI_API_KEY = 'api_key'; // 请替换为您的实际API密钥
 const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
 
 // 获取DOM元素
@@ -61,7 +61,7 @@ async function callOpenAIAPI(message) {
                 'Authorization': `Bearer ${OPENAI_API_KEY}`
             },
             body: JSON.stringify({
-                model: "gpt-4o-mini",
+                model: "gpt-3.5-turbo",
                 messages: [{role: "user", content: message}],
                 temperature: 0.7
             })
@@ -85,11 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
     chatWidget.classList.add('chat-closed');
 });
 
-async function sendMessageToAPI(message) {
+export async function sendMessageToAPI(message) {
     try {
         const response = await client.chat.completions.create({
             messages: [{ role: 'user', content: message }],
-            model: 'gpt-4o-mini'
+            model: 'gpt-3.5-turbo'
         });
 
         console.log('Request ID:', response._request_id);

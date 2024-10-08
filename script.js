@@ -34,6 +34,8 @@ const sendMessage = document.querySelector('.send-message');
 const chatInput = document.querySelector('.chat-input input');
 const chatMessages = document.querySelector('.chat-messages');
 
+// import { sendMessageToAPI } from './chat.js';
+
 chatIcon.addEventListener('click', () => {
     chatWindow.style.display = 'block';
     chatIcon.style.display = 'none';
@@ -91,3 +93,14 @@ function addMessageToChat(sender, message) {
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
+// 移除与 hero 相关的代码
+// function changeHeroBackground() {
+//     const heroElement = document.querySelector('#hero');
+//     if (heroElement) {
+//         // 这里是更改 hero 背景的逻辑
+//         heroElement.style.backgroundImage = 'url(new-image.jpg)';
+//     }
+// }
+
+// 其他代码...
