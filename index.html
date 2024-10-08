@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evan Zuo的个人网站</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header id="hero">
+        <div class="hero-content">
+            <h1>Evan ZUO</h1>
+            <p>AI工程师，专注于人工智能和大数据领域</p>
+        </div>
+    </header>
+
+    <section id="about">
+        <div class="container">
+            <div class="text">
+                <h2>关于我</h2>
+                <p>我是一名人工智能和大数据领域的专业人士，拥有西蒙菲莎大学计算机科学本科学位和香港科技大学的大数据硕士学位。我具备丰富的项目经验，曾参与开发多种机器学习模型，应用于用户行为预测、路径规划及旅游路线优化等实际场景。精通C++、Python、Java等编程语言，熟悉Windows、Mac OS和Linux等操作系统。通过实际项目，我在机器学习、数据分析、强化学习等方面积累了扎实的技术基础，并展现了较强的团队协作和项目管理能力。现在在wind担任大模型算法工程师, 开发与优化RAG在金融领域应用。</p>
+            </div>
+            <div class="image">
+                <img src="img_file/DSCF1036.JPG" alt="个人照片">
+            </div>
+        </div>
+    </section>
+
+    <section id="carousel">
+        <div class="carousel-container">
+            <img src="img_file/DSCF1036.JPG" alt="轮播图片1" class="carousel-image active">
+            <img src="img_file/Image.JPEG" alt="轮播图片2" class="carousel-image">
+            <img src="img_file/IMG_8171.JPG" alt="轮播图片3" class="carousel-image">
+            <img src="img_file/IMG_8191.JPG" alt="轮播图片4" class="carousel-image">
+        </div>
+        <div class="carousel-dots"></div>
+    </section>
+
+    <section id="portfolio">
+        <div class="container">
+            <h2>项目展示</h2>
+            <div class="projects">
+                <div class="project-card">
+                    <img src="img_file/agents_collaboration.png" alt="项目1">
+                    <h3>项目1</h3>
+                    <p>项目1的简短描述...</p>
+                </div>
+                <div class="project-card">
+                    <img src="img_file/autogen.png" alt="项目2">
+                    <h3>项目2</h3>
+                    <p>项目2的简短描述...</p>
+                </div>
+                <div class="project-card">
+                    <img src="img_file/DPO_LLMEvaluate.png" alt="项目3">
+                    <h3>项目3</h3>
+                    <p>项目3的简短描述...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="social">
+        <div class="container">
+            <div class="social-info">
+                <p class="social-account">微信: ZYF_Ethan</p>
+                <p class="social-account">Instagram: zed_evan</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 [Evan ZUO] All rights reserved.</p>
+    </footer>
+
+    <div id="chat-widget" class="chat-closed">
+        <div class="chat-icon">💬</div>
+        <div class="chat-window">
+            <div class="chat-header">
+                <h3>与AI对话</h3>
+                <button class="close-chat">×</button>
+            </div>
+            <div class="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="输入您的消息...">
+                <button class="send-message">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="chat.js"></script>
+</body>
+</html>
