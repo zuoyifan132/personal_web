@@ -16,7 +16,7 @@ body {
 /* Hero 部分 */
 #hero {
     height: 100vh;
-    background-image: url('/Users/evan/Desktop/rest/test_web/img_file/IMG_8191.JPG');
+    background-image: url('img_file/IMG_8191.JPG');
     background-size: cover;
     background-position: center;
     display: flex;
