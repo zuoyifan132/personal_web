@@ -111,8 +111,8 @@ footer {
 
 .chat-window {
     display: none; /* 初始状态为隐藏 */
-    width: 300px;
-    height: 400px;
+    width: 400px; /* 增大宽度 */
+    height: 500px; /* 增大高度 */
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -372,4 +372,5 @@ footer {
     padding: 8px 12px;
     border-radius: 18px; /* 设置圆角 */
     max-width: 80%;
+    font-size: 14px; /* 调整字体大小 */
 }
