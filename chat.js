@@ -1,8 +1,8 @@
 // OpenAI API configuration
-const OPENAI_API_KEY = 'api key'; // Replace with your actual API key
+let OPENAI_API_KEY = ''; // 初始化为空
 const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
 
-// Get DOM elements
+// 获取DOM元素
 const chatWidget = document.getElementById('chat-widget');
 const chatIcon = chatWidget.querySelector('.chat-icon');
 const chatWindow = chatWidget.querySelector('.chat-window');
@@ -11,22 +11,54 @@ const userInput = document.getElementById('user-input');
 const sendButton = chatWidget.querySelector('.send-message');
 const closeButton = chatWidget.querySelector('.close-chat');
 
-// Open/close chat window
+// 添加API密钥输入框
+const apiKeyInput = document.createElement('input');
+apiKeyInput.type = 'text';
+apiKeyInput.placeholder = '请输入您的API密钥';
+apiKeyInput.classList.add('api-key-input');
+chatWindow.insertBefore(apiKeyInput, chatMessages);
+
+// 打开/关闭聊天窗口
 chatIcon.addEventListener('click', () => {
     chatWidget.classList.toggle('chat-open');
     if (chatWidget.classList.contains('chat-open')) {
-        userInput.focus(); // Focus input when chat window opens
+        chatWindow.style.display = 'flex'; // 确保窗口显示
+        if (!OPENAI_API_KEY) {
+            apiKeyInput.focus(); // 当聊天窗口打开时，聚焦API密钥输入框
+        } else {
+            userInput.focus();
+        }
+    } else {
+        chatWindow.style.display = 'none'; // 确保窗口隐藏
     }
 });
 
 closeButton.addEventListener('click', () => {
     chatWidget.classList.remove('chat-open');
+    chatWindow.style.display = 'none'; // 确保窗口隐藏
 });
 
-// Send message
-sendButton.addEventListener('click', sendMessage);
+// 发送消息
+sendButton.addEventListener('click', () => {
+    if (!OPENAI_API_KEY) {
+        OPENAI_API_KEY = apiKeyInput.value.trim();
+        if (!OPENAI_API_KEY) {
+            alert('请先输入API密钥');
+            return;
+        }
+    }
+    sendMessage();
+});
+
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
+        if (!OPENAI_API_KEY) {
+            OPENAI_API_KEY = apiKeyInput.value.trim();
+            if (!OPENAI_API_KEY) {
+                alert('请先输入API密钥');
+                return;
+            }
+        }
         sendMessage();
     }
 });
@@ -57,19 +89,19 @@ async function callOpenAIAPI(message) {
                 'Authorization': `Bearer ${OPENAI_API_KEY}`
             },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo",
+                model: "gpt-4o",
                 messages: [{ role: "user", content: message }],
                 temperature: 0.7
             })
         });
 
+        const data = await response.json();
         console.log('API Response:', data); // 打印API响应
 
         if (!response.ok) {
             throw new Error('API request failed');
         }
 
-        const data = await response.json();
         const aiResponse = data.choices[0].message.content.trim();
         addMessageToChat('ai', aiResponse);
     } catch (error) {
@@ -78,31 +110,8 @@ async function callOpenAIAPI(message) {
     }
 }
 
-export async function sendMessageToAPI(message) {
-    // Your existing function implementation
-    try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENAI_API_KEY}`
-            },
-            body: JSON.stringify({
-                model: "gpt-3.5-turbo",
-                messages: [{ role: "user", content: message }],
-                temperature: 0.7
-            })
-        });
-
-        const data = await response.json();
-        return data.choices[0].message.content.trim();
-    } catch (error) {
-        console.error('Error:', error);
-        throw error;
-    }
-}
-
-// Initialize chat window
+// 初始化聊天窗口
 document.addEventListener('DOMContentLoaded', () => {
     chatWidget.classList.add('chat-closed');
+    chatWindow.style.display = 'none'; // 确保窗口初始状态为隐藏
 });
