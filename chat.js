@@ -68,6 +68,7 @@ async function callOpenAIAPI(message) {
         }
 
         const data = await response.json();
+        console.log('API Response:', data); // 打印API响应
         const aiResponse = data.choices[0].message.content.trim();
         addMessageToChat('ai', aiResponse);
     } catch (error) {
