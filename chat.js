@@ -114,6 +114,8 @@ async function callOpenAIAPI(message) {
 document.addEventListener('DOMContentLoaded', () => {
     chatWidget.classList.add('chat-closed');
     chatWindow.style.display = 'none'; // 确保窗口初始状态为隐藏
+    chatWidget.style.left = 'calc(100% - 420px)'; // 初始位置在屏幕右侧内
+    chatWidget.style.top = 'calc(100% - 520px)'; // 初始位置在屏幕底部内
     makeDraggable(chatWidget); // 使聊天窗口可拖拽
 });
 
@@ -137,8 +139,14 @@ function makeDraggable(element) {
         if (!isDragging) return;
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
-        element.style.left = `${initialX + dx}px`;
-        element.style.top = `${initialY + dy}px`;
+        const newX = initialX + dx;
+        const newY = initialY + dy;
+
+        // 确保对话框不会被拖出屏幕
+        const maxX = window.innerWidth - element.offsetWidth;
+        const maxY = window.innerHeight - element.offsetHeight;
+        element.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
+        element.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
     }
 
     function onMouseUp() {
