@@ -116,17 +116,13 @@ footer {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    overflow: hidden;
-    flex-direction: column; /* 添加这行 */
-}
-
-/* 添加这个新类 */
-.chat-closed .chat-window {
-    display: none; /* 确保窗口初始关闭状态 */
+    overflow: auto; /* 允许内容滚动 */
+    flex-direction: column;
+    resize: both; /* 允许拖拽调整大小 */
 }
 
 .chat-open .chat-window {
-    display: flex; /* 打开窗口时显示并使用flex布局 */
+    display: flex; /* 当聊天窗口打开时，使用flex布局 */
 }
 
 .chat-header {
