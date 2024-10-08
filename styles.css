@@ -113,8 +113,6 @@ footer {
     display: none; /* 初始状态为隐藏 */
     width: 400px; /* 增大宽度 */
     height: 500px; /* 增大高度 */
-    max-width: 90vw; /* 限制最大宽度为视口宽度的90% */
-    max-height: 90vh; /* 限制最大高度为视口高度的90% */
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
