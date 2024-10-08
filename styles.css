@@ -300,12 +300,14 @@ footer {
     color: white;
     align-self: flex-end;
     margin-left: auto;
+    border-radius: 18px 18px 0 18px; /* 用户消息的圆角样式 */
 }
 
 .ai-message {
     background-color: #f0f0f0;
     color: #333;
     align-self: flex-start;
+    border-radius: 18px 18px 18px 0; /* AI消息的圆角样式 */
 }
 
 .chat-messages {
@@ -362,4 +364,12 @@ footer {
     /* background-color: rgba(0, 0, 0, 0.5); */
     padding: 20px;
     border-radius: 10px;
+}
+
+/* 聊天消息样式 */
+.chat-message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 18px; /* 设置圆角 */
+    max-width: 80%;
 }
