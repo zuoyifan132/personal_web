@@ -91,8 +91,8 @@ footer {
 /* 聊天窗口 */
 #chat-widget {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 20px; /* 确保在屏幕底部 */
+    right: 20px; /* 确保在屏幕右侧 */
     z-index: 1000;
 }
 

@@ -114,8 +114,9 @@ async function callOpenAIAPI(message) {
 document.addEventListener('DOMContentLoaded', () => {
     chatWidget.classList.add('chat-closed');
     chatWindow.style.display = 'none'; // 确保窗口初始状态为隐藏
-    chatWidget.style.left = 'calc(100% - 420px)'; // 初始位置在屏幕右侧内
-    chatWidget.style.top = 'calc(100% - 520px)'; // 初始位置在屏幕底部内
+    // 移除以下两行以避免覆盖CSS中的位置设置
+    // chatWidget.style.left = 'calc(100% - 420px)';
+    // chatWidget.style.top = 'calc(100% - 520px)';
     makeDraggable(chatWidget); // 使聊天窗口可拖拽
 });
 
