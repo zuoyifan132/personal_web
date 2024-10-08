@@ -94,6 +94,7 @@ footer {
     bottom: 20px; /* 确保在屏幕底部 */
     right: 20px; /* 确保在屏幕右侧 */
     z-index: 1000;
+    transition: transform 0.3s ease-in-out; /* 添加平滑过渡效果 */
 }
 
 .chat-icon {
@@ -119,6 +120,10 @@ footer {
     overflow: auto; /* 允许内容滚动 */
     flex-direction: column;
     resize: both; /* 允许拖拽调整大小 */
+}
+
+.chat-open #chat-widget {
+    transform: translate(-100%, -100%); /* 向左上角展开 */
 }
 
 .chat-open .chat-window {
