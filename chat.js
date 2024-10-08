@@ -36,6 +36,7 @@ chatIcon.addEventListener('click', () => {
 closeButton.addEventListener('click', () => {
     chatWidget.classList.remove('chat-open');
     chatWindow.style.display = 'none'; // 确保窗口隐藏
+    chatWidget.style.transform = ''; // 重置位置
 });
 
 // 发送消息
