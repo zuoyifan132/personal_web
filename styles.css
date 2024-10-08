@@ -124,6 +124,9 @@ footer {
 .chat-open .chat-window {
     display: flex; /* 当聊天窗口打开时，使用flex布局 */
 }
+.chat-closed .chat-window {
+    display: none;
+}
 
 .chat-header {
     background-color: #007bff;
