@@ -1,12 +1,8 @@
-import OpenAI from 'openai';
-
-const client = new OpenAI();
-
-// OpenAI API配置
-const OPENAI_API_KEY = 'api_key'; // 请替换为您的实际API密钥
+// OpenAI API configuration
+const OPENAI_API_KEY = 'api key'; // Replace with your actual API key
 const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
 
-// 获取DOM元素
+// Get DOM elements
 const chatWidget = document.getElementById('chat-widget');
 const chatIcon = chatWidget.querySelector('.chat-icon');
 const chatWindow = chatWidget.querySelector('.chat-window');
@@ -15,11 +11,11 @@ const userInput = document.getElementById('user-input');
 const sendButton = chatWidget.querySelector('.send-message');
 const closeButton = chatWidget.querySelector('.close-chat');
 
-// 打开/关闭聊天窗口
+// Open/close chat window
 chatIcon.addEventListener('click', () => {
     chatWidget.classList.toggle('chat-open');
     if (chatWidget.classList.contains('chat-open')) {
-        userInput.focus(); // 聊天窗口打开时，让输入框获得焦点
+        userInput.focus(); // Focus input when chat window opens
     }
 });
 
@@ -27,7 +23,7 @@ closeButton.addEventListener('click', () => {
     chatWidget.classList.remove('chat-open');
 });
 
-// 发送消息
+// Send message
 sendButton.addEventListener('click', sendMessage);
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
@@ -62,13 +58,13 @@ async function callOpenAIAPI(message) {
             },
             body: JSON.stringify({
                 model: "gpt-3.5-turbo",
-                messages: [{role: "user", content: message}],
+                messages: [{ role: "user", content: message }],
                 temperature: 0.7
             })
         });
 
         if (!response.ok) {
-            throw new Error('API请求失败');
+            throw new Error('API request failed');
         }
 
         const data = await response.json();
@@ -76,27 +72,35 @@ async function callOpenAIAPI(message) {
         addMessageToChat('ai', aiResponse);
     } catch (error) {
         console.error('Error:', error);
-        addMessageToChat('ai', '抱歉，我遇到了一些问题。请稍后再试。');
+        addMessageToChat('ai', 'Sorry, something went wrong. Please try again later.');
     }
 }
 
-// 初始化聊天窗口
-document.addEventListener('DOMContentLoaded', () => {
-    chatWidget.classList.add('chat-closed');
-});
-
 export async function sendMessageToAPI(message) {
+    // Your existing function implementation
     try {
-        const response = await client.chat.completions.create({
-            messages: [{ role: 'user', content: message }],
-            model: 'gpt-3.5-turbo'
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENAI_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: "gpt-3.5-turbo",
+                messages: [{ role: "user", content: message }],
+                temperature: 0.7
+            })
         });
 
-        console.log('Request ID:', response._request_id);
-
-        return response.choices[0].message.content.trim();
+        const data = await response.json();
+        return data.choices[0].message.content.trim();
     } catch (error) {
         console.error('Error:', error);
         throw error;
     }
 }
+
+// Initialize chat window
+document.addEventListener('DOMContentLoaded', () => {
+    chatWidget.classList.add('chat-closed');
+});

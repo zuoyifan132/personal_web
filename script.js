@@ -1,3 +1,5 @@
+import { sendMessageToAPI } from './chat.js';
+
 // 照片轮播
 const carouselImages = document.querySelectorAll('.carousel-image');
 const carouselDots = document.querySelector('.carousel-dots');
