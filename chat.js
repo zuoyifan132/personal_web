@@ -80,8 +80,13 @@ function addMessageToChat(sender, message) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+// 在文件顶部添加
+const modelSelect = document.getElementById('model-select');
+
+// 修改 callOpenAIAPI 函数
 async function callOpenAIAPI(message) {
     try {
+        const selectedModel = modelSelect.value; // 获取选定的模型
         const response = await fetch(API_ENDPOINT, {
             method: 'POST',
             headers: {
@@ -89,14 +94,14 @@ async function callOpenAIAPI(message) {
                 'Authorization': `Bearer ${OPENAI_API_KEY}`
             },
             body: JSON.stringify({
-                model: "gpt-4o",
+                model: selectedModel, // 使用选定的模型
                 messages: [{ role: "user", content: message }],
                 temperature: 0.7
             })
         });
 
         const data = await response.json();
-        console.log('API Response:', data); // 打印API响应
+        console.log('API Response:', data);
 
         if (!response.ok) {
             throw new Error('API request failed');
