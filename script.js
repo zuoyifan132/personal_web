@@ -20,6 +20,7 @@ function setActiveImage(index) {
     currentImageIndex = index;
     carouselImages[currentImageIndex].classList.add('active');
     carouselDots.children[currentImageIndex].classList.add('active');
+    console.log('Setting active image:', index);
 }
 
 function nextImage() {
@@ -71,7 +72,7 @@ async function sendChatMessage() {
             // 调用 chat.js 中的 API 函数
             const response = await sendMessageToAPI(message);
             
-            // 移除加载指示器
+            // 移除加指示器
             chatMessages.removeChild(loadingIndicator);
             
             // 添加 AI 回复到聊天窗口
@@ -106,3 +107,5 @@ function addMessageToChat(sender, message) {
 // }
 
 // 其他代码...
+console.log('Carousel images:', carouselImages);
+console.log('Carousel dots:', carouselDots);
