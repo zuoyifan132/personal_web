@@ -1,6 +1,7 @@
 // OpenAI API configuration
 let OPENAI_API_KEY = ''; // 初始化为空
 const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+const PERSONAL_API_ENDPOINT = 'https://937e-202-101-22-90.ngrok-free.app/api/generate';
 
 // 获取DOM元素
 const chatWidget = document.getElementById('chat-widget');
@@ -66,6 +67,14 @@ userInput.addEventListener('keypress', (e) => {
 function sendMessage() {
     const message = userInput.value.trim();
     if (message) {
+        const selectedModel = modelSelect.value;
+        if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
+            OPENAI_API_KEY = apiKeyInput.value.trim();
+            if (!OPENAI_API_KEY) {
+                alert('请先输入API密钥');
+                return;
+            }
+        }
         addMessageToChat('user', message);
         userInput.value = '';
         callOpenAIAPI(message);
@@ -86,18 +95,28 @@ const modelSelect = document.getElementById('model-select');
 // 修改 callOpenAIAPI 函数
 async function callOpenAIAPI(message) {
     try {
-        const selectedModel = modelSelect.value; // 获取选定的模型
-        const response = await fetch(API_ENDPOINT, {
+        const selectedModel = modelSelect.value;
+        let apiEndpoint = API_ENDPOINT;
+        let headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${OPENAI_API_KEY}`
+        };
+        let body = {
+            model: selectedModel,
+            messages: [{ role: "user", content: message }],
+            temperature: 0.7
+        };
+
+        if (selectedModel === 'qwen2.5-3b-instruct') {
+            apiEndpoint = PERSONAL_API_ENDPOINT;
+            headers = { 'Content-Type': 'application/json' };
+            body = { prompt: message };
+        }
+
+        const response = await fetch(apiEndpoint, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENAI_API_KEY}`
-            },
-            body: JSON.stringify({
-                model: selectedModel, // 使用选定的模型
-                messages: [{ role: "user", content: message }],
-                temperature: 0.7
-            })
+            headers: headers,
+            body: JSON.stringify(body)
         });
 
         const data = await response.json();
@@ -107,11 +126,16 @@ async function callOpenAIAPI(message) {
             throw new Error('API request failed');
         }
 
-        const aiResponse = data.choices[0].message.content.trim();
+        let aiResponse;
+        if (selectedModel === 'qwen2.5-3b-instruct') {
+            aiResponse = data.response.trim();
+        } else {
+            aiResponse = data.choices[0].message.content.trim();
+        }
         addMessageToChat('ai', aiResponse);
     } catch (error) {
         console.error('Error:', error);
-        addMessageToChat('ai', 'Sorry, something went wrong. Please try again later.');
+        addMessageToChat('ai', '抱歉,出现了错误。请稍后再试。');
     }
 }
 
