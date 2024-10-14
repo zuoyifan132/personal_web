@@ -1,7 +1,7 @@
 // OpenAI API configuration
 let OPENAI_API_KEY = ''; // 初始化为空
 const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
-const PERSONAL_API_ENDPOINT = 'https://28d5-2409-891f-9247-6bda-6146-a222-5b73-162c.ngrok-free.app';
+const PERSONAL_API_ENDPOINT = 'https://28d5-2409-891f-9247-6bda-6146-a222-5b73-162c.ngrok-free.app/api/generate';
 
 // 获取DOM元素
 const chatWidget = document.getElementById('chat-widget');
