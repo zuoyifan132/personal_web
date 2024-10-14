@@ -114,7 +114,7 @@ async function callOpenAIAPI(message) {
             // Use the personal API endpoint for this model
             apiEndpoint = PERSONAL_API_ENDPOINT;
             headers = { 'Content-Type': 'application/json' }; // Remove Authorization header
-            body = { prompt: message };
+            body = { "model": "qwen2.5:3b-instruct", prompt: message };
         }
 
         const response = await fetch(apiEndpoint, {
