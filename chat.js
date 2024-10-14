@@ -1,7 +1,7 @@
 // OpenAI API configuration
 let OPENAI_API_KEY = ''; // 初始化为空
 const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
-const PERSONAL_API_ENDPOINT = 'https://937e-202-101-22-90.ngrok-free.app/api/generate';
+const PERSONAL_API_ENDPOINT = 'https://00a3-202-101-22-90.ngrok-free.app/api/generate';
 
 // 获取DOM元素
 const chatWidget = document.getElementById('chat-widget');
@@ -111,11 +111,10 @@ async function callOpenAIAPI(message) {
         };
 
         if (selectedModel === 'qwen2.5-3b-instruct') {
+            // Use the personal API endpoint for this model
             apiEndpoint = PERSONAL_API_ENDPOINT;
-            headers = { 'Content-Type': 'application/json' };
+            headers = { 'Content-Type': 'application/json' }; // Remove Authorization header
             body = { prompt: message };
-            // 移除Authorization头
-            delete headers['Authorization'];
         }
 
         const response = await fetch(apiEndpoint, {
