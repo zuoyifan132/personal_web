@@ -24,7 +24,8 @@ chatIcon.addEventListener('click', () => {
     chatWidget.classList.toggle('chat-open');
     if (chatWidget.classList.contains('chat-open')) {
         chatWindow.style.display = 'flex'; // 确保窗口显示
-        if (!OPENAI_API_KEY) {
+        const selectedModel = modelSelect.value;
+        if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
             apiKeyInput.focus(); // 当聊天窗口打开时，聚焦API密钥输入框
         } else {
             userInput.focus();
@@ -41,7 +42,8 @@ closeButton.addEventListener('click', () => {
 
 // 发送消息
 sendButton.addEventListener('click', () => {
-    if (!OPENAI_API_KEY) {
+    const selectedModel = modelSelect.value;
+    if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
         OPENAI_API_KEY = apiKeyInput.value.trim();
         if (!OPENAI_API_KEY) {
             alert('请先输入API密钥');
@@ -53,7 +55,8 @@ sendButton.addEventListener('click', () => {
 
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
-        if (!OPENAI_API_KEY) {
+        const selectedModel = modelSelect.value;
+        if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
             OPENAI_API_KEY = apiKeyInput.value.trim();
             if (!OPENAI_API_KEY) {
                 alert('请先输入API密钥');
@@ -111,6 +114,8 @@ async function callOpenAIAPI(message) {
             apiEndpoint = PERSONAL_API_ENDPOINT;
             headers = { 'Content-Type': 'application/json' };
             body = { prompt: message };
+            // 移除Authorization头
+            delete headers['Authorization'];
         }
 
         const response = await fetch(apiEndpoint, {
