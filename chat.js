@@ -95,14 +95,17 @@ function addMessageToChat(sender, message) {
 // 在文件顶部添加
 const modelSelect = document.getElementById('model-select');
 
-// 修改 callOpenAIAPI 函数
 async function callOpenAIAPI(message) {
     try {
         const selectedModel = modelSelect.value;
         let apiEndpoint = API_ENDPOINT;
         let headers = {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${OPENAI_API_KEY}`
+            'Authorization': `Bearer ${OPENAI_API_KEY}`,
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
         };
         let body = {
             model: selectedModel,
@@ -113,7 +116,13 @@ async function callOpenAIAPI(message) {
         if (selectedModel === 'qwen2.5-3b-instruct') {
             // Use the personal API endpoint for this model
             apiEndpoint = PERSONAL_API_ENDPOINT;
-            headers = { 'Content-Type': 'application/json' }; // Remove Authorization header
+            headers = { 
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Credentials': 'true',
+                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type'
+            }; // Remove Authorization header for this model
             body = { "model": "qwen2.5:3b-instruct", prompt: message };
         }
 
