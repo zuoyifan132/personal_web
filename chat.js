@@ -1,9 +1,9 @@
 // OpenAI API configuration
-let OPENAI_API_KEY = ''; // 初始化为空
+let OPENAI_API_KEY = ''; // Initially set to empty
 const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
 const PERSONAL_API_ENDPOINT = 'https://00a3-202-101-22-90.ngrok-free.app/api/generate';
 
-// 获取DOM元素
+// Get DOM elements
 const chatWidget = document.getElementById('chat-widget');
 const chatIcon = chatWidget.querySelector('.chat-icon');
 const chatWindow = chatWidget.querySelector('.chat-window');
@@ -12,37 +12,49 @@ const userInput = document.getElementById('user-input');
 const sendButton = chatWidget.querySelector('.send-message');
 const closeButton = chatWidget.querySelector('.close-chat');
 
-// 添加API密钥输入框
+// Model selection dropdown
+const modelSelect = document.getElementById('model-select');
+
+// Add API key input field
 const apiKeyInput = document.createElement('input');
 apiKeyInput.type = 'text';
 apiKeyInput.placeholder = '请输入您的API密钥';
 apiKeyInput.classList.add('api-key-input');
 chatWindow.insertBefore(apiKeyInput, chatMessages);
 
-// 打开/关闭聊天窗口
+// Toggle chat window open/close
 chatIcon.addEventListener('click', () => {
     chatWidget.classList.toggle('chat-open');
     if (chatWidget.classList.contains('chat-open')) {
-        chatWindow.style.display = 'flex'; // 确保窗口显示
+        chatWindow.style.display = 'flex'; // Ensure window is visible
         const selectedModel = modelSelect.value;
         if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
-            apiKeyInput.focus(); // 当聊天窗口打开时，聚焦API密钥输入框
+            apiKeyInput.focus(); // Focus on API key input if needed
         } else {
             userInput.focus();
         }
     } else {
-        chatWindow.style.display = 'none'; // 确保窗口隐藏
+        chatWindow.style.display = 'none'; // Ensure window is hidden
     }
 });
 
 closeButton.addEventListener('click', () => {
     chatWidget.classList.remove('chat-open');
-    chatWindow.style.display = 'none'; // 确保窗口隐藏
+    chatWindow.style.display = 'none'; // Ensure window is hidden
 });
 
-// 发送消息
-sendButton.addEventListener('click', () => {
+// Handle sending message
+sendButton.addEventListener('click', () => handleSendMessage());
+userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleSendMessage();
+});
+
+function handleSendMessage() {
+    const message = userInput.value.trim();
     const selectedModel = modelSelect.value;
+
+    if (!message) return; // Don't send empty messages
+
     if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
         OPENAI_API_KEY = apiKeyInput.value.trim();
         if (!OPENAI_API_KEY) {
@@ -50,55 +62,26 @@ sendButton.addEventListener('click', () => {
             return;
         }
     }
-    sendMessage();
-});
 
-userInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        const selectedModel = modelSelect.value;
-        if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
-            OPENAI_API_KEY = apiKeyInput.value.trim();
-            if (!OPENAI_API_KEY) {
-                alert('请先输入API密钥');
-                return;
-            }
-        }
-        sendMessage();
-    }
-});
+    addMessageToChat('user', message); // Display user's message in chat
+    userInput.value = ''; // Clear input field
 
-function sendMessage() {
-    const message = userInput.value.trim();
-    if (message) {
-        const selectedModel = modelSelect.value;
-        if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
-            OPENAI_API_KEY = apiKeyInput.value.trim();
-            if (!OPENAI_API_KEY) {
-                alert('请先输入API密钥');
-                return;
-            }
-        }
-        addMessageToChat('user', message);
-        userInput.value = '';
-        callOpenAIAPI(message);
-    }
+    // Call the appropriate API depending on the selected model
+    callAPI(selectedModel, message);
 }
 
+// Function to add message to chat window
 function addMessageToChat(sender, message) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('chat-message', `${sender}-message`);
     messageElement.textContent = message;
     chatMessages.appendChild(messageElement);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to the latest message
 }
 
-// 在文件顶部添加
-const modelSelect = document.getElementById('model-select');
-
-// 修改 callOpenAIAPI 函数
-async function callOpenAIAPI(message) {
+// Call the appropriate API depending on model
+async function callAPI(selectedModel, message) {
     try {
-        const selectedModel = modelSelect.value;
         let apiEndpoint = API_ENDPOINT;
         let headers = {
             'Content-Type': 'application/json',
@@ -106,7 +89,7 @@ async function callOpenAIAPI(message) {
         };
         let body = {
             model: selectedModel,
-            messages: [{ role: "user", content: message }],
+            messages: [{ role: 'user', content: message }],
             temperature: 0.7
         };
 
@@ -123,43 +106,42 @@ async function callOpenAIAPI(message) {
             body: JSON.stringify(body)
         });
 
-        const data = await response.json();
-        console.log('API Response:', data);
-
         if (!response.ok) {
             throw new Error('API request failed');
         }
 
-        let aiResponse;
+        const data = await response.json();
+        let aiResponse = '';
+
         if (selectedModel === 'qwen2.5-3b-instruct') {
-            aiResponse = data.response.trim();
+            // Handle custom API response format
+            aiResponse = data.response?.trim() || '未获得有效回复。';
         } else {
+            // Handle OpenAI response format
             aiResponse = data.choices[0].message.content.trim();
         }
+
         addMessageToChat('ai', aiResponse);
     } catch (error) {
         console.error('Error:', error);
-        addMessageToChat('ai', '抱歉,出现了错误。请稍后再试。');
+        addMessageToChat('ai', '抱歉, 出现了错误。请稍后再试。');
     }
 }
 
-// 初始化聊天窗口
+// Initialize chat window
 document.addEventListener('DOMContentLoaded', () => {
     chatWidget.classList.add('chat-closed');
-    chatWindow.style.display = 'none'; // 确保窗口初始状态为隐藏
-    // 移除以下两行以避免覆盖CSS中的位置设置
-    // chatWidget.style.left = 'calc(100% - 420px)';
-    // chatWidget.style.top = 'calc(100% - 520px)';
-    makeDraggable(chatWidget); // 使聊天窗口可拖拽
+    chatWindow.style.display = 'none'; // Ensure window is hidden on load
+    makeDraggable(chatWidget); // Enable drag-and-drop functionality
 });
 
-// 使元素可拖拽的函数
+// Make chat window draggable
 function makeDraggable(element) {
     let isDragging = false;
     let startX, startY, initialX, initialY;
 
     element.addEventListener('mousedown', (e) => {
-        if (e.target !== chatIcon) return; // 仅在点击图标时开始拖拽
+        if (e.target !== chatIcon) return; // Only start drag when the icon is clicked
         isDragging = true;
         startX = e.clientX;
         startY = e.clientY;
@@ -176,7 +158,7 @@ function makeDraggable(element) {
         const newX = initialX + dx;
         const newY = initialY + dy;
 
-        // 确保对话框不会被拖出屏幕
+        // Prevent dragging the window off-screen
         const maxX = window.innerWidth - element.offsetWidth;
         const maxY = window.innerHeight - element.offsetHeight;
         element.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
