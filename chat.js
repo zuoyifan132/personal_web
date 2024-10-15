@@ -19,6 +19,9 @@ apiKeyInput.placeholder = '请输入您的API密钥';
 apiKeyInput.classList.add('api-key-input');
 chatWindow.insertBefore(apiKeyInput, chatMessages);
 
+// 在文件顶部添加
+const modelSelect = document.getElementById('model-select');
+
 // 添加模型选择变更事件监听器
 modelSelect.addEventListener('change', () => {
     const selectedModel = modelSelect.value;
@@ -103,9 +106,6 @@ function addMessageToChat(sender, message) {
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
-// 在文件顶部添加
-const modelSelect = document.getElementById('model-select');
 
 async function callOpenAIAPI(message) {
     const INSTRUCTION = "你是一个有非常有用的助手, 精通各种知识. ��下是你的一些设定: 你是由Evan ZUO部署咋在他个人网站的千问2.5-3b-instruct模型. 处于礼貌, 你可以欢迎使用者拉到Evan ZUO的个人网站并帮助他人回答他的问题";
