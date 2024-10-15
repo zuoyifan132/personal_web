@@ -82,6 +82,10 @@ userInput.addEventListener('keypress', (e) => {
     }
 });
 
+// 在文件顶部添加一个变量来存储对话历史
+let conversationHistory = [];
+
+// 修改 sendMessage 函数
 function sendMessage() {
     const message = userInput.value.trim();
     if (message) {
@@ -94,6 +98,8 @@ function sendMessage() {
             }
         }
         addMessageToChat('user', message);
+        // 将用户消息添加到对话历史
+        conversationHistory.push({ role: "user", content: message });
         userInput.value = '';
         callOpenAIAPI(message);
     }
@@ -135,8 +141,8 @@ async function callOpenAIAPI(message) {
         let body = {
             model: selectedModel,
             messages: [
-                { role: "system", content: INSTRUCTION }, // 添加指令到消息中
-                { role: "user", content: message }
+                { role: "system", content: INSTRUCTION },
+                ...conversationHistory // 添加整个对话历史
             ],
             temperature: 0.7
         };
@@ -144,9 +150,14 @@ async function callOpenAIAPI(message) {
         if (selectedModel === 'qwen2.5-3b-instruct') {
             apiEndpoint = PERSONAL_API_ENDPOINT;
             headers = { 'Content-Type': 'application/json' };
+            // 为千问模型构建提示词，包含历史对话
+            let prompt = `系统设定: ${INSTRUCTION}\n`;
+            conversationHistory.forEach(msg => {
+                prompt += `${msg.role === 'user' ? '用户' : 'AI'}: ${msg.content}\n`;
+            });
             body = {
                 "model": "qwen2.5:3b-instruct",
-                "prompt": `系统设定: ${INSTRUCTION}\n用户: ${message}`, // 标注系统和用户部分
+                "prompt": prompt,
                 "stream": true
             };
         }
@@ -180,12 +191,9 @@ async function callOpenAIAPI(message) {
                         try {
                             const responseData = JSON.parse(line);
                             aiResponse += responseData['response'];
-
-                            // 如果需要实时更新聊天窗口，可以在此调用更新函数
-                            // addMessageToChat('ai', aiResponse);
                         } catch (e) {
                             console.error('Error parsing JSON:', e);
-                            continue;  // 跳过无法解析的行
+                            continue;
                         }
                     }
                 }
@@ -196,6 +204,9 @@ async function callOpenAIAPI(message) {
             console.log('API Response:', data);
             aiResponse = data.choices[0].message.content.trim();
         }
+
+        // 将AI响应添加到对话历史
+        conversationHistory.push({ role: "assistant", content: aiResponse });
 
         // 最终更新聊天窗口
         addMessageToChat('ai', aiResponse);
@@ -249,3 +260,20 @@ function makeDraggable(element) {
         document.removeEventListener('mouseup', onMouseUp);
     }
 }
+
+// 添加一个清除对话历史的函数
+function clearConversation() {
+    conversationHistory = [];
+    chatMessages.innerHTML = '';
+    addMessageToChat('ai', '对话已重置。有什么我可以帮您的吗？');
+}
+
+// 在 chat-header 中添加一个重置按钮
+document.addEventListener('DOMContentLoaded', () => {
+    const chatHeader = document.querySelector('.chat-header');
+    const resetButton = document.createElement('button');
+    resetButton.textContent = '重置对话';
+    resetButton.classList.add('reset-chat');
+    resetButton.addEventListener('click', clearConversation);
+    chatHeader.appendChild(resetButton);
+});

@@ -68,7 +68,7 @@ body {
     text-decoration: underline;
 }
 
-/* 在现有的 #about 样式下添加以下内容 */
+/* 在现有的 #about 样式下添加以下���容 */
 .image-carousel {
     position: relative;
     width: 100%;
@@ -445,4 +445,19 @@ footer {
 
 .research-item li {
     margin-bottom: 10px;
+}
+
+.reset-chat {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.reset-chat:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
