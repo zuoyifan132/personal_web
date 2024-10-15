@@ -118,10 +118,10 @@ async function callOpenAIAPI(message) {
             apiEndpoint = PERSONAL_API_ENDPOINT;
             headers = { 
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': 'true',
-                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type'
+                //'Access-Control-Allow-Origin': '*',
+                //'Access-Control-Allow-Credentials': 'true',
+                //'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+                //'Access-Control-Allow-Headers': 'Content-Type'
             }; // Remove Authorization header for this model
             body = { "model": "qwen2.5:3b-instruct", prompt: message };
         }
