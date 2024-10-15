@@ -100,15 +100,31 @@ function sendMessage() {
 }
 
 function addMessageToChat(sender, message) {
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('message-container', `${sender}-message-container`);
+
+    const avatar = document.createElement('div');
+    avatar.classList.add('message-avatar', `${sender}-avatar`);
+    avatar.textContent = sender === 'user' ? 'U' : 'AI';
+
     const messageElement = document.createElement('div');
-    messageElement.classList.add('chat-message', `${sender}-message`);
+    messageElement.classList.add('message', `${sender}-message`);
     messageElement.textContent = message;
-    chatMessages.appendChild(messageElement);
+
+    if (sender === 'user') {
+        messageContainer.appendChild(messageElement);
+        messageContainer.appendChild(avatar);
+    } else {
+        messageContainer.appendChild(avatar);
+        messageContainer.appendChild(messageElement);
+    }
+
+    chatMessages.appendChild(messageContainer);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 async function callOpenAIAPI(message) {
-    const INSTRUCTION = "你是一个有非常有用的助手, 精通各种知识. ��下是你的一些设定: 你是由Evan ZUO部署咋在他个人网站的千问2.5-3b-instruct模型. 处于礼貌, 你可以欢迎使用者来到Evan ZUO的个人网站[https://personal-web-nu-eight.vercel.app/]并帮助使用者回答关于Evan ZUO的问题或者其他帮助";
+    const INSTRUCTION = "你是一个有非常有用的助手, 精通各种知识. 下是你的一些设定: 你是由Evan ZUO部署咋在他个人网站的千问2.5-3b-instruct模型. 处于礼貌, 你可以欢迎使用者来到Evan ZUO的个人网站[https://personal-web-nu-eight.vercel.app/]并帮助使用者回答关于Evan ZUO的问题或者其他帮助";
     try {
         const selectedModel = modelSelect.value;
         let apiEndpoint = API_ENDPOINT;
