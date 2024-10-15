@@ -21,6 +21,16 @@ chatWindow.insertBefore(apiKeyInput, chatMessages);
 // 在文件顶部添加
 const modelSelect = document.getElementById('model-select');
 
+// 在初始化部分添加以下代码
+document.addEventListener('DOMContentLoaded', () => {
+    const selectedModel = modelSelect.value;
+    if (selectedModel === 'qwen2.5-3b-instruct') {
+        apiKeyInput.style.display = 'none';
+    }
+    // 触发模型选择变更事件,确保UI状态正确
+    modelSelect.dispatchEvent(new Event('change'));
+});
+
 // 添加模型选择变更事件监听器
 modelSelect.addEventListener('change', () => {
     const selectedModel = modelSelect.value;
@@ -209,14 +219,6 @@ async function callOpenAIAPI(message) {
         addMessageToChat('ai', '抱歉，出现了错误。请稍后再试。');
     }
 }
-
-// 初始化时检查当前选择的模型
-document.addEventListener('DOMContentLoaded', () => {
-    const selectedModel = modelSelect.value;
-    if (selectedModel === 'qwen2.5-3b-instruct') {
-        apiKeyInput.style.display = 'none';
-    }
-});
 
 // 使元素可拖拽的函数
 function makeDraggable(element) {
