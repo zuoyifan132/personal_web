@@ -132,7 +132,7 @@ async function callOpenAIAPI(message) {
             body: JSON.stringify(body)
         });
 
-        const data = await response.json();
+        const data = await response.text();
         console.log('API Response:', data);
 
         if (!response.ok) {
