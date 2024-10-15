@@ -19,9 +19,6 @@ apiKeyInput.placeholder = '请输入您的API密钥';
 apiKeyInput.classList.add('api-key-input');
 chatWindow.insertBefore(apiKeyInput, chatMessages);
 
-// model instruction
-const INSTRUCTION = "你是一个非常有用的助手, 精通各种知识. 以下是你的一些设定: 你是由Evan ZUO部署在他个人网站的千问2.5-3b-instruct模型. 处于礼貌, 你可以欢迎使用者来到Evan ZUO的个人网站并帮助他人回答他的问题";
-
 // 添加模型选择变更事件监听器
 modelSelect.addEventListener('change', () => {
     const selectedModel = modelSelect.value;
@@ -111,6 +108,7 @@ function addMessageToChat(sender, message) {
 const modelSelect = document.getElementById('model-select');
 
 async function callOpenAIAPI(message) {
+    const INSTRUCTION = "你是一个有非常有用的助手, 精通各种知识. ��下是你的一些设定: 你是由Evan ZUO部署咋在他个人网站的千问2.5-3b-instruct模型. 处于礼貌, 你可以欢迎使用者拉到Evan ZUO的个人网站并帮助他人回答他的问题";
     try {
         const selectedModel = modelSelect.value;
         let apiEndpoint = API_ENDPOINT;
@@ -121,7 +119,7 @@ async function callOpenAIAPI(message) {
         let body = {
             model: selectedModel,
             messages: [
-                { role: "system", content: INSTRUCTION },
+                { role: "system", content: INSTRUCTION }, // 添加指令到消息中
                 { role: "user", content: message }
             ],
             temperature: 0.7
@@ -132,7 +130,7 @@ async function callOpenAIAPI(message) {
             headers = { 'Content-Type': 'application/json' };
             body = {
                 "model": "qwen2.5:3b-instruct",
-                "prompt": INSTRUCTION + "\n用户: " + message + "\n助手: ",
+                "prompt": `系统设定: ${INSTRUCTION}\n用户: ${message}`, // 标注系统和用户部分
                 "stream": true
             };
         }
@@ -162,7 +160,7 @@ async function callOpenAIAPI(message) {
                 const lines = chunk.split('\n');
 
                 for (let line of lines) {
-                    if (line.trim()) {  // 忽略空行
+                    if (line.trim()) {
                         try {
                             const responseData = JSON.parse(line);
                             aiResponse += responseData['response'];
