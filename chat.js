@@ -114,16 +114,17 @@ async function callOpenAIAPI(message) {
         };
 
         if (selectedModel === 'qwen2.5-3b-instruct') {
-            // Use the personal API endpoint for this model
+            // 使用您的个人 API 端点和配置
             apiEndpoint = PERSONAL_API_ENDPOINT;
-            headers = { 
+            headers = {
                 'Content-Type': 'application/json',
-                //'Access-Control-Allow-Origin': '*',
-                //'Access-Control-Allow-Credentials': 'true',
-                //'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-                //'Access-Control-Allow-Headers': 'Content-Type'
-            }; // Remove Authorization header for this model
-            body = { "model": "qwen2.5:3b-instruct", prompt: message };
+                // 如果不需要授权头，则删除
+            };
+            body = {
+                "model": "qwen2.5:3b-instruct",
+                "prompt": message,
+                "stream": true  // 启用流式输出
+            };
         }
 
         const response = await fetch(apiEndpoint, {
@@ -132,23 +133,51 @@ async function callOpenAIAPI(message) {
             body: JSON.stringify(body)
         });
 
-        const data = await response.text();
-        console.log('API Response:', data);
-
         if (!response.ok) {
             throw new Error('API request failed');
         }
 
-        let aiResponse;
+        let aiResponse = '';
+
         if (selectedModel === 'qwen2.5-3b-instruct') {
-            aiResponse = data.response.trim();
+            // 处理流式响应
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split('\n');
+
+                for (let line of lines) {
+                    if (line.trim()) {  // 忽略空行
+                        try {
+                            const responseData = JSON.parse(line);
+                            aiResponse += responseData['response'];
+
+                            // 如果需要实时更新聊天窗口，可以在此调用更新函数
+                            // addMessageToChat('ai', aiResponse);
+                        } catch (e) {
+                            console.error('Error parsing JSON:', e);
+                            continue;  // 跳过无法解析的行
+                        }
+                    }
+                }
+            }
         } else {
+            // 非流式处理
+            const data = await response.json();
+            console.log('API Response:', data);
             aiResponse = data.choices[0].message.content.trim();
         }
+
+        // 最终更新聊天窗口
         addMessageToChat('ai', aiResponse);
     } catch (error) {
         console.error('Error:', error);
-        addMessageToChat('ai', '抱歉,出现了错误。请稍后再试。');
+        addMessageToChat('ai', '抱歉，出现了错误。请稍后再试。');
     }
 }
 
