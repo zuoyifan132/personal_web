@@ -10,7 +10,6 @@ const chatWindow = chatWidget.querySelector('.chat-window');
 const chatMessages = chatWidget.querySelector('.chat-messages');
 const userInput = document.getElementById('user-input');
 const sendButton = chatWidget.querySelector('.send-message');
-const closeButton = chatWidget.querySelector('.close-chat');
 
 // 添加API密钥输入框
 const apiKeyInput = document.createElement('input');
@@ -48,11 +47,6 @@ chatIcon.addEventListener('click', () => {
     } else {
         chatWindow.style.display = 'none'; // 确保窗口隐藏
     }
-});
-
-closeButton.addEventListener('click', () => {
-    chatWidget.classList.remove('chat-open');
-    chatWindow.style.display = 'none'; // 确保窗口隐藏
 });
 
 // 发送消息
