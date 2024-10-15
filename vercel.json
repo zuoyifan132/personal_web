@@ -5,7 +5,7 @@
         "headers": [
           {
             "key": "Access-Control-Allow-Origin",
-            "value": "https://personal-web-nu-eight.vercel.app"
+            "value": "28d5-2409-891f-9247-6bda-6146-a222-5b73-162c.ngrok-free.app"
           },
           {
             "key": "Access-Control-Allow-Methods",
