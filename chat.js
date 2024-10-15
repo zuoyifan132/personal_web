@@ -19,6 +19,21 @@ apiKeyInput.placeholder = '请输入您的API密钥';
 apiKeyInput.classList.add('api-key-input');
 chatWindow.insertBefore(apiKeyInput, chatMessages);
 
+// model instruction
+const INSTRUCTION = "你是一个非常有用的助手, 精通各种知识. 以下是你的一些设定: 你是由Evan ZUO部署在他个人网站的千问2.5-3b-instruct模型. 处于礼貌, 你可以欢迎使用者来到Evan ZUO的个人网站并帮助他人回答他的问题";
+
+// 添加模型选择变更事件监听器
+modelSelect.addEventListener('change', () => {
+    const selectedModel = modelSelect.value;
+    if (selectedModel === 'qwen2.5-3b-instruct') {
+        apiKeyInput.style.display = 'none';
+        apiKeyInput.value = ''; // 清空 API 密钥
+        OPENAI_API_KEY = ''; // 重置 API 密钥
+    } else {
+        apiKeyInput.style.display = 'block';
+    }
+});
+
 // 打开/关闭聊天窗口
 chatIcon.addEventListener('click', () => {
     chatWidget.classList.toggle('chat-open');
@@ -71,7 +86,7 @@ function sendMessage() {
     const message = userInput.value.trim();
     if (message) {
         const selectedModel = modelSelect.value;
-        if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
+        if (selectedModel !== 'qwen2.5-3b-instruct') {
             OPENAI_API_KEY = apiKeyInput.value.trim();
             if (!OPENAI_API_KEY) {
                 alert('请先输入API密钥');
@@ -101,29 +116,24 @@ async function callOpenAIAPI(message) {
         let apiEndpoint = API_ENDPOINT;
         let headers = {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${OPENAI_API_KEY}`,
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': 'true',
-            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+            'Authorization': `Bearer ${OPENAI_API_KEY}`
         };
         let body = {
             model: selectedModel,
-            messages: [{ role: "user", content: message }],
+            messages: [
+                { role: "system", content: INSTRUCTION },
+                { role: "user", content: message }
+            ],
             temperature: 0.7
         };
 
         if (selectedModel === 'qwen2.5-3b-instruct') {
-            // 使用您的个人 API 端点和配置
             apiEndpoint = PERSONAL_API_ENDPOINT;
-            headers = {
-                'Content-Type': 'application/json',
-                // 如果不需要授权头，则删除
-            };
+            headers = { 'Content-Type': 'application/json' };
             body = {
                 "model": "qwen2.5:3b-instruct",
-                "prompt": message,
-                "stream": true  // 启用流式输出
+                "prompt": INSTRUCTION + "\n用户: " + message + "\n助手: ",
+                "stream": true
             };
         }
 
@@ -181,14 +191,12 @@ async function callOpenAIAPI(message) {
     }
 }
 
-// 初始化聊天窗口
+// 初始化时检查当前选择的模型
 document.addEventListener('DOMContentLoaded', () => {
-    chatWidget.classList.add('chat-closed');
-    chatWindow.style.display = 'none'; // 确保窗口初始状态为隐藏
-    // 移除以下两行以避免覆盖CSS中的位置设置
-    // chatWidget.style.left = 'calc(100% - 420px)';
-    // chatWidget.style.top = 'calc(100% - 520px)';
-    makeDraggable(chatWidget); // 使聊天窗口可拖拽
+    const selectedModel = modelSelect.value;
+    if (selectedModel === 'qwen2.5-3b-instruct') {
+        apiKeyInput.style.display = 'none';
+    }
 });
 
 // 使元素可拖拽的函数
