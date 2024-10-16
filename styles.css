@@ -68,7 +68,7 @@ body {
     text-decoration: underline;
 }
 
-/* 在现有的 #about 样式下添加以下���容 */
+/* 在现有的 #about 样式下添加以下容 */
 .image-carousel {
     position: relative;
     width: 100%;
@@ -206,8 +206,8 @@ footer {
 .chat-window {
     display: none;
     flex-direction: column;
-    width: 400px;
-    height: 500px;
+    width: 500px;
+    height: 600px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -392,6 +392,11 @@ footer {
 
     .projects {
         grid-template-columns: 1fr;
+    }
+
+    .chat-window {
+        width: 100%;
+        height: 100vh;
     }
 }
 
