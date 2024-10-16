@@ -68,7 +68,7 @@ body {
     text-decoration: underline;
 }
 
-/* 在现有的 #about 样式下添加以下容 */
+/* 在现有的 #about 样式下添加以���容 */
 .image-carousel {
     position: relative;
     width: 100%;
@@ -539,4 +539,15 @@ footer {
     0% { content: '.'; }
     33% { content: '..'; }
     66% { content: '...'; }
+}
+
+/* 数学公式样式 */
+.katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 0;
+}
+
+.katex {
+    font-size: 1.1em;
 }

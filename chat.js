@@ -160,6 +160,16 @@ function addMessageToChat(sender, message) {
     // 使用marked解析Markdown(仅对AI消息进行解析)
     if (sender === 'ai') {
         messageElement.innerHTML = marked.parse(message);
+        // 渲染数学公式
+        renderMathInElement(messageElement, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError : false
+        });
     } else {
         messageElement.textContent = message;
     }
@@ -318,3 +328,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 在文件顶部添加一个变量来控制加载状态
 let isLoading = false;
+
