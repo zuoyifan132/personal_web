@@ -119,7 +119,13 @@ function addMessageToChat(sender, message) {
 
     const messageElement = document.createElement('div');
     messageElement.classList.add('message', `${sender}-message`);
-    messageElement.textContent = message;
+    
+    // 使用marked解析Markdown(仅对AI消息进行解析)
+    if (sender === 'ai') {
+        messageElement.innerHTML = marked.parse(message);
+    } else {
+        messageElement.textContent = message;
+    }
 
     if (sender === 'user') {
         messageContainer.appendChild(messageElement);
