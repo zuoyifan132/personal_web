@@ -206,8 +206,8 @@ footer {
 .chat-window {
     display: none;
     flex-direction: column;
-    width: 500px;
-    height: 600px;
+    width: 600px;
+    height: 700px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
