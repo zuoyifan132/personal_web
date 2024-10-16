@@ -520,3 +520,23 @@ footer {
     padding-left: 10px;
     color: #666;
 }
+
+/* 在现有的聊天样式下添加 */
+.loading-message {
+    display: flex;
+    align-items: center;
+}
+
+.loading-message::after {
+    content: '...';
+    animation: ellipsis 1.5s infinite;
+    width: 15px;
+    text-align: left;
+    display: inline-block;
+}
+
+@keyframes ellipsis {
+    0% { content: '.'; }
+    33% { content: '..'; }
+    66% { content: '...'; }
+}

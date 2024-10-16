@@ -92,7 +92,7 @@ let conversationHistory = [];
 // 修改 sendMessage 函数
 function sendMessage() {
     const message = userInput.value.trim();
-    if (message) {
+    if (message && !isLoading) {
         const selectedModel = modelSelect.value;
         if (selectedModel !== 'qwen2.5-3b-instruct') {
             OPENAI_API_KEY = apiKeyInput.value.trim();
@@ -105,8 +105,45 @@ function sendMessage() {
         // 将用户消息添加到对话历史
         conversationHistory.push({ role: "user", content: message });
         userInput.value = '';
-        callOpenAIAPI(message);
+        
+        // 添加加载指示器
+        isLoading = true;
+        const loadingMessage = addLoadingMessage();
+        
+        callOpenAIAPI(message).then(() => {
+            // 移除加载指示器
+            chatMessages.removeChild(loadingMessage);
+            isLoading = false;
+        }).catch((error) => {
+            console.error('Error:', error);
+            addMessageToChat('ai', '抱歉，出现了错误。请稍后再试。');
+            // 移除加载指示器
+            chatMessages.removeChild(loadingMessage);
+            isLoading = false;
+        });
     }
+}
+
+// 添加一个新函数来创建加载指示器
+function addLoadingMessage() {
+    const loadingContainer = document.createElement('div');
+    loadingContainer.classList.add('message-container', 'ai-message-container');
+
+    const avatar = document.createElement('div');
+    avatar.classList.add('message-avatar', 'ai-avatar');
+    avatar.textContent = 'AI';
+
+    const loadingMessage = document.createElement('div');
+    loadingMessage.classList.add('message', 'ai-message', 'loading-message');
+    loadingMessage.textContent = '正在思考中...';
+
+    loadingContainer.appendChild(avatar);
+    loadingContainer.appendChild(loadingMessage);
+
+    chatMessages.appendChild(loadingContainer);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    return loadingContainer;
 }
 
 function addMessageToChat(sender, message) {
@@ -221,8 +258,7 @@ async function callOpenAIAPI(message) {
         // 最终更新聊天窗口
         addMessageToChat('ai', aiResponse);
     } catch (error) {
-        console.error('Error:', error);
-        addMessageToChat('ai', '抱歉，出现了错误。请稍后再试。');
+        throw error; // 将错误抛出，以便在sendMessage函数中处理
     }
 }
 
@@ -279,3 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
     resetButton.addEventListener('click', clearConversation);
     chatHeader.appendChild(resetButton);
 });
+
+// 在文件顶部添加一个变量来控制加载状态
+let isLoading = false;
