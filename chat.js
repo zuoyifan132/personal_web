@@ -1,208 +1,5 @@
-// OpenAI API configuration
-let OPENAI_API_KEY = ''; // 初始化为空
-const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
-const PERSONAL_API_ENDPOINT = 'https://warm-sadly-warthog.ngrok-free.app/api/generate';
-
-// 获取DOM元素
-const chatWidget = document.getElementById('chat-widget');
-const chatIcon = chatWidget.querySelector('.chat-icon');
-const chatWindow = chatWidget.querySelector('.chat-window');
-const chatMessages = chatWidget.querySelector('.chat-messages');
-const userInput = document.getElementById('user-input');
-const sendButton = chatWidget.querySelector('.send-message');
-
-// 添加API密钥输入框
-const apiKeyInput = document.createElement('input');
-apiKeyInput.type = 'text';
-apiKeyInput.placeholder = '请输入您的API密钥';
-apiKeyInput.classList.add('api-key-input');
-chatWindow.insertBefore(apiKeyInput, chatMessages);
-
-// 在文件顶部添加
-const modelSelect = document.getElementById('model-select');
-
-// 在初始化部分添加以下代码
-document.addEventListener('DOMContentLoaded', () => {
-    const selectedModel = modelSelect.value;
-    if (selectedModel === 'qwen2.5-3b-instruct') {
-        apiKeyInput.style.display = 'none';
-    }
-    // 触发模型选择变更事件,确保UI状态正确
-    modelSelect.dispatchEvent(new Event('change'));
-});
-
-// 添加模型选择变更事件监听器
-modelSelect.addEventListener('change', () => {
-    const selectedModel = modelSelect.value;
-    if (selectedModel === 'qwen2.5-3b-instruct') {
-        apiKeyInput.style.display = 'none';
-        apiKeyInput.value = ''; // 清空 API 密钥
-        OPENAI_API_KEY = ''; // 重置 API 密钥
-    } else {
-        apiKeyInput.style.display = 'block';
-    }
-});
-
-// 打开/关闭聊天窗口
-chatIcon.addEventListener('click', () => {
-    chatWidget.classList.toggle('chat-open');
-    if (chatWidget.classList.contains('chat-open')) {
-        chatWindow.style.display = 'flex'; // 确保窗口显示
-        const selectedModel = modelSelect.value;
-        if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
-            apiKeyInput.focus(); // 当聊天窗口打开时，聚焦API密钥输入框
-        } else {
-            userInput.focus();
-        }
-    } else {
-        chatWindow.style.display = 'none'; // 确保窗口隐藏
-    }
-});
-
-// 发送消息
-sendButton.addEventListener('click', () => {
-    const selectedModel = modelSelect.value;
-    if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
-        OPENAI_API_KEY = apiKeyInput.value.trim();
-        if (!OPENAI_API_KEY) {
-            alert('请先输入API密钥');
-            return;
-        }
-    }
-    sendMessage();
-});
-
-userInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        const selectedModel = modelSelect.value;
-        if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
-            OPENAI_API_KEY = apiKeyInput.value.trim();
-            if (!OPENAI_API_KEY) {
-                alert('请先输入API密钥');
-                return;
-            }
-        }
-        sendMessage();
-    }
-});
-
-// 在文件顶部添加一个变量来存储对话历史
-let conversationHistory = [];
-
-// 修改 sendMessage 函数
-function sendMessage() {
-    const message = userInput.value.trim();
-    if (message && !isLoading) {
-        const selectedModel = modelSelect.value;
-        if (selectedModel !== 'qwen2.5-3b-instruct') {
-            OPENAI_API_KEY = apiKeyInput.value.trim();
-            if (!OPENAI_API_KEY) {
-                alert('请先输入API密钥');
-                return;
-            }
-        }
-        addMessageToChat('user', message);
-        // 将用户消息添加到对话历史
-        conversationHistory.push({ role: "user", content: message });
-        userInput.value = '';
-        
-        // 添加加载指示器
-        isLoading = true;
-        const loadingMessage = addLoadingMessage();
-        
-        callOpenAIAPI(message).then(() => {
-            // 移除加载指示器
-            chatMessages.removeChild(loadingMessage);
-            isLoading = false;
-        }).catch((error) => {
-            console.error('Error:', error);
-            addMessageToChat('ai', '抱歉，出现了错误。请稍后再试。');
-            // 移除加载指示器
-            chatMessages.removeChild(loadingMessage);
-            isLoading = false;
-        });
-    }
-}
-
-// 添加一个新函数来创建加载指示器
-function addLoadingMessage() {
-    const loadingContainer = document.createElement('div');
-    loadingContainer.classList.add('message-container', 'ai-message-container');
-
-    const avatar = document.createElement('div');
-    avatar.classList.add('message-avatar', 'ai-avatar');
-    avatar.textContent = 'AI';
-
-    const loadingMessage = document.createElement('div');
-    loadingMessage.classList.add('message', 'ai-message', 'loading-message');
-    loadingMessage.textContent = '正在思考中...';
-
-    loadingContainer.appendChild(avatar);
-    loadingContainer.appendChild(loadingMessage);
-
-    chatMessages.appendChild(loadingContainer);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    return loadingContainer;
-}
-
-function addMessageToChat(sender, message) {
-    const messageContainer = document.createElement('div');
-    messageContainer.classList.add('message-container', `${sender}-message-container`);
-
-    const avatar = document.createElement('div');
-    avatar.classList.add('message-avatar', `${sender}-avatar`);
-    avatar.textContent = sender === 'user' ? 'U' : 'AI';
-
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message', `${sender}-message`);
-
-    // 使用marked解析Markdown(仅对AI消息进行解析)
-    if (sender === 'ai') {
-        messageElement.innerHTML = marked.parse(message);
-        // 渲染数学公式
-        renderMathInElement(messageElement, {
-            delimiters: [
-                {left: '$$', right: '$$', display: true},
-                {left: '$', right: '$', display: false},
-                {left: '\\(', right: '\\)', display: false},
-                {left: '\\[', right: '\\]', display: true}
-            ],
-            throwOnError : false
-        });
-    } else {
-        messageElement.textContent = message;
-    }
-
-    // 创建复制按钮
-    const copyButton = document.createElement('button');
-    copyButton.innerHTML = '<img src="img_file/copy-icon.png" alt="复制" class="copy-icon">'; // 使用图标
-    copyButton.classList.add('copy-button');
-    copyButton.addEventListener('click', () => {
-        const textToCopy = messageElement.textContent; // 获取要复制的文本
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            alert('已复制内容！');
-        }).catch(err => {
-            console.error('复制失败:', err);
-        });
-    });
-
-    // 将复制按钮放置在消息容器中
-    messageContainer.appendChild(avatar);
-    messageContainer.appendChild(messageElement);
-    messageContainer.appendChild(copyButton); // 添加复制按钮
-
-    // 根据发送者调整布局
-    if (sender === 'user') {
-        messageContainer.style.flexDirection = 'row-reverse'; // 用户消息在右侧
-    }
-
-    chatMessages.appendChild(messageContainer);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
 async function callOpenAIAPI(message) {
-    const INSTRUCTION = "你是一个有非常有用的助手, 精通各种知识. 下是你的一些设定: 你是由Evan ZUO部署咋在他个人网站的千问2.5-3b-instruct模型. 处于礼貌, 你可以欢迎使用者来到Evan ZUO的个人网站[https://personal-web-nu-eight.vercel.app/]并帮助使用者回答关于Evan ZUO的问题或者其他帮助";
+    const INSTRUCTION = "你是一个有非常有用的助手, 精通各种知识. 下是你的一些设定: 你是由Evan ZUO部署咋在他个人网站的千问2.5-7b-instruct模型. 处于礼貌, 你可以欢迎使用者来到Evan ZUO的个人网站[https://personal-web-nu-eight.vercel.app/]并帮助使用者回答关于Evan ZUO的问题或者其他帮助";
     try {
         const selectedModel = modelSelect.value;
         let apiEndpoint = API_ENDPOINT;
@@ -219,16 +16,16 @@ async function callOpenAIAPI(message) {
             temperature: 0.7
         };
 
-        if (selectedModel === 'qwen2.5-3b-instruct') {
+        if (selectedModel === 'qwen2.5-7b-instruct') { // 更新模型名称
             apiEndpoint = PERSONAL_API_ENDPOINT;
             headers = { 'Content-Type': 'application/json' };
             // 为千问模型构建提示词，包含历史对话
-            let prompt = `系统设: ${INSTRUCTION}\n`;
+            let prompt = `系统设定: ${INSTRUCTION}\n`;
             conversationHistory.forEach(msg => {
                 prompt += `${msg.role === 'user' ? '用户' : 'AI'}: ${msg.content}\n`;
             });
             body = {
-                "model": "qwen2.5:3b-instruct",
+                "model": "qwen2.5:7b-instruct", // 更新模型名称
                 "prompt": prompt,
                 "stream": true
             };
@@ -246,7 +43,7 @@ async function callOpenAIAPI(message) {
 
         let aiResponse = '';
 
-        if (selectedModel === 'qwen2.5-3b-instruct') {
+        if (selectedModel === 'qwen2.5-7b-instruct') {
             // 处理流式响应
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
@@ -286,73 +83,3 @@ async function callOpenAIAPI(message) {
         throw error; // 将错误抛出，以便在sendMessage函数中处理
     }
 }
-
-// 使元素可拖拽的函数
-function makeDraggable(element) {
-    let isDragging = false;
-    let startX, startY, initialX, initialY;
-
-    element.addEventListener('mousedown', (e) => {
-        if (e.target !== chatIcon) return; // 仅在点击图标时开始拖拽
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        initialX = element.offsetLeft;
-        initialY = element.offsetTop;
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
-    });
-
-    function onMouseMove(e) {
-        if (!isDragging) return;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        const newX = initialX + dx;
-        const newY = initialY + dy;
-
-        // 确保对话框不会被拖出屏幕
-        const maxX = window.innerWidth - element.offsetWidth;
-        const maxY = window.innerHeight - element.offsetHeight;
-        element.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
-        element.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
-    }
-
-    function onMouseUp() {
-        isDragging = false;
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-    }
-}
-
-// 添加一个清除对话历史的函数
-function clearConversation() {
-    conversationHistory = [];
-    chatMessages.innerHTML = '';
-    addMessageToChat('ai', '对话已重置。有什么我可以帮您的吗？');
-}
-
-// 在 chat-header 中添加一个重置按钮
-document.addEventListener('DOMContentLoaded', () => {
-    const chatHeader = document.querySelector('.chat-header');
-    const resetButton = document.createElement('button');
-    resetButton.textContent = '重置对话';
-    resetButton.classList.add('reset-chat');
-    resetButton.addEventListener('click', clearConversation);
-    chatHeader.appendChild(resetButton);
-});
-
-// 在文件顶部添加一个变量来控制加载状态
-let isLoading = false;
-
-// 添加复制按钮的事件监听器
-document.getElementById('copy-button').addEventListener('click', () => {
-    const messages = Array.from(chatMessages.children)
-        .map(message => message.textContent)
-        .join('\n'); // 将所有消息合并为一个字符串
-
-    navigator.clipboard.writeText(messages).then(() => {
-        alert('对话已复制到剪贴板！');
-    }).catch(err => {
-        console.error('复制失败:', err);
-    });
-});
