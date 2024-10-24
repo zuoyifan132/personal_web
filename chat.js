@@ -208,7 +208,7 @@ async function callOpenAIAPI(message) {
             apiEndpoint = PERSONAL_API_ENDPOINT;
             headers = { 'Content-Type': 'application/json' };
             // 为千问模型构建提示词，包含历史对话
-            let prompt = `系统设定: ${INSTRUCTION}\n`;
+            let prompt = `系统设���: ${INSTRUCTION}\n`;
             conversationHistory.forEach(msg => {
                 prompt += `${msg.role === 'user' ? '用户' : 'AI'}: ${msg.content}\n`;
             });
@@ -329,3 +329,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // 在文件顶部添加一个变量来控制加载状态
 let isLoading = false;
 
+// 添加复制按钮的事件监听器
+document.getElementById('copy-button').addEventListener('click', () => {
+    const messages = Array.from(chatMessages.children)
+        .map(message => message.textContent)
+        .join('\n'); // 将所有消息合并为一个字符串
+
+    navigator.clipboard.writeText(messages).then(() => {
+        alert('对话已复制到剪贴板！');
+    }).catch(err => {
+        console.error('复制失败:', err);
+    });
+});

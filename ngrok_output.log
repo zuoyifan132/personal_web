@@ -1,0 +1,11 @@
+t=2024-10-24T10:58:38+0800 lvl=info msg="no configuration paths supplied"
+t=2024-10-24T10:58:38+0800 lvl=info msg="using configuration at default config path" path="/Users/evan/Library/Application Support/ngrok/ngrok.yml"
+t=2024-10-24T10:58:38+0800 lvl=info msg="open config file" path="/Users/evan/Library/Application Support/ngrok/ngrok.yml" err=nil
+t=2024-10-24T10:58:38+0800 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-10-24T10:58:39+0800 lvl=info msg="client session established" obj=tunnels.session
+t=2024-10-24T10:58:39+0800 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-10-24T10:58:39+0800 lvl=info msg="started tunnel" obj=tunnels name=command_line addr=http://localhost:11434 url=https://warm-sadly-warthog.ngrok-free.app
+t=2024-10-24T10:58:40+0800 lvl=info msg="update available" obj=updater
+t=2024-10-24T10:59:34+0800 lvl=info msg="join connections" obj=join id=abf9698019b9 l=127.0.0.1:11434 r=103.152.220.14:32175
+t=2024-10-24T11:08:43+0800 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-10-24T11:08:43+0800 lvl=info msg="session closing" obj=tunnels.session err=nil
