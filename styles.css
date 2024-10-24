@@ -301,41 +301,51 @@ footer {
 
 .message-container {
     display: flex;
-    margin-bottom: 10px;
+    align-items: flex-start; /* 垂直对齐 */
+    margin-bottom: 10px; /* 消息之间的间距 */
 }
 
 .user-message-container {
-    justify-content: flex-end;
+    justify-content: flex-end; /* 用户消息在右侧 */
 }
 
 .ai-message-container {
-    justify-content: flex-start;
+    justify-content: flex-start; /* AI消息在左侧 */
+}
+
+.copy-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 5px; /* 调整与消息的间距 */
+}
+
+.copy-icon {
+    width: 20px; /* 图标宽度 */
+    height: 20px; /* 图标高度 */
+    vertical-align: middle; /* 垂直对齐 */
 }
 
 .message-avatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin: 0 10px;
-    align-self: flex-end;
+    width: 30px; /* 头像宽度 */
+    height: 30px; /* 头像高度 */
+    border-radius: 50%; /* 圆形头像 */
+    margin-right: 10px; /* 头像与消息之间的间距 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff; /* 头像背景色 */
+    color: white; /* 头像文字颜色 */
+    font-weight: bold; /* 头像文字加粗 */
 }
 
 .user-avatar {
-    background-color: #007bff;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
+    background-color: #007bff; /* 用户头像背景色 */
 }
 
 .ai-avatar {
-    background-color: #f0f0f0;
-    color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
+    background-color: #f0f0f0; /* AI头像背景色 */
 }
 
 /* 固定头像样式 */
@@ -584,3 +594,4 @@ footer {
     color: white; /* 头像文字颜色 */
     font-weight: bold; /* 头像文字加粗 */
 }
+

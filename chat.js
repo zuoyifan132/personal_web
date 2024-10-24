@@ -192,6 +192,11 @@ function addMessageToChat(sender, message) {
     messageContainer.appendChild(messageElement);
     messageContainer.appendChild(copyButton); // 添加复制按钮
 
+    // 根据发送者调整布局
+    if (sender === 'user') {
+        messageContainer.style.flexDirection = 'row-reverse'; // 用户消息在右侧
+    }
+
     chatMessages.appendChild(messageContainer);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
