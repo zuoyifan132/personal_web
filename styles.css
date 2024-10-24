@@ -68,7 +68,7 @@ body {
     text-decoration: underline;
 }
 
-/* 在现有的 #about 样式下添加以���容 */
+/* 在现有的 #about 样式下添加以容 */
 .image-carousel {
     position: relative;
     width: 100%;
@@ -550,4 +550,37 @@ footer {
 
 .katex {
     font-size: 1.1em;
+}
+
+.copy-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px; /* 调整与消息的间距 */
+}
+
+.copy-icon {
+    width: 20px; /* 图标宽度 */
+    height: 20px; /* 图标高度 */
+    vertical-align: middle; /* 垂直对齐 */
+}
+
+.message-container {
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    margin-bottom: 10px; /* 消息之间的间距 */
+}
+
+.message-avatar {
+    width: 30px; /* 头像宽度 */
+    height: 30px; /* 头像高度 */
+    border-radius: 50%; /* 圆形头像 */
+    margin-right: 10px; /* 头像与消息之间的间距 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff; /* 头像背景色 */
+    color: white; /* 头像文字颜色 */
+    font-weight: bold; /* 头像文字加粗 */
 }

@@ -176,7 +176,7 @@ function addMessageToChat(sender, message) {
 
     // 创建复制按钮
     const copyButton = document.createElement('button');
-    copyButton.textContent = '复制';
+    copyButton.innerHTML = '<img src="img_file/copy-icon.png" alt="复制" class="copy-icon">'; // 使用图标
     copyButton.classList.add('copy-button');
     copyButton.addEventListener('click', () => {
         const textToCopy = messageElement.textContent; // 获取要复制的文本
@@ -187,15 +187,10 @@ function addMessageToChat(sender, message) {
         });
     });
 
-    if (sender === 'user') {
-        messageContainer.appendChild(messageElement);
-        messageContainer.appendChild(copyButton); // 添加复制按钮
-        messageContainer.appendChild(avatar);
-    } else {
-        messageContainer.appendChild(avatar);
-        messageContainer.appendChild(messageElement);
-        messageContainer.appendChild(copyButton); // 添加复制按钮
-    }
+    // 将复制按钮放置在消息容器中
+    messageContainer.appendChild(avatar);
+    messageContainer.appendChild(messageElement);
+    messageContainer.appendChild(copyButton); // 添加复制按钮
 
     chatMessages.appendChild(messageContainer);
     chatMessages.scrollTop = chatMessages.scrollHeight;
