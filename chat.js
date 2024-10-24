@@ -24,7 +24,7 @@ const modelSelect = document.getElementById('model-select');
 // 在初始化部分添加以下代码
 document.addEventListener('DOMContentLoaded', () => {
     const selectedModel = modelSelect.value;
-    if (selectedModel === 'qwen2.5-3b-instruct') {
+    if (selectedModel === 'qwen2.5-7b-instruct') {
         apiKeyInput.style.display = 'none';
     }
     // 触发模型选择变更事件,确保UI状态正确
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // 添加模型选择变更事件监听器
 modelSelect.addEventListener('change', () => {
     const selectedModel = modelSelect.value;
-    if (selectedModel === 'qwen2.5-3b-instruct') {
+    if (selectedModel === 'qwen2.5-7b-instruct') {
         apiKeyInput.style.display = 'none';
         apiKeyInput.value = ''; // 清空 API 密钥
         OPENAI_API_KEY = ''; // 重置 API 密钥
@@ -49,7 +49,7 @@ chatIcon.addEventListener('click', () => {
     if (chatWidget.classList.contains('chat-open')) {
         chatWindow.style.display = 'flex'; // 确保窗口显示
         const selectedModel = modelSelect.value;
-        if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
+        if (selectedModel !== 'qwen2.5-7b-instruct' && !OPENAI_API_KEY) {
             apiKeyInput.focus(); // 当聊天窗口打开时，聚焦API密钥输入框
         } else {
             userInput.focus();
@@ -62,7 +62,7 @@ chatIcon.addEventListener('click', () => {
 // 发送消息
 sendButton.addEventListener('click', () => {
     const selectedModel = modelSelect.value;
-    if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
+    if (selectedModel !== 'qwen2.5-7b-instruct' && !OPENAI_API_KEY) {
         OPENAI_API_KEY = apiKeyInput.value.trim();
         if (!OPENAI_API_KEY) {
             alert('请先输入API密钥');
@@ -75,7 +75,7 @@ sendButton.addEventListener('click', () => {
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         const selectedModel = modelSelect.value;
-        if (selectedModel !== 'qwen2.5-3b-instruct' && !OPENAI_API_KEY) {
+        if (selectedModel !== 'qwen2.5-7b-instruct' && !OPENAI_API_KEY) {
             OPENAI_API_KEY = apiKeyInput.value.trim();
             if (!OPENAI_API_KEY) {
                 alert('请先输入API密钥');
@@ -94,7 +94,7 @@ function sendMessage() {
     const message = userInput.value.trim();
     if (message && !isLoading) {
         const selectedModel = modelSelect.value;
-        if (selectedModel !== 'qwen2.5-3b-instruct') {
+        if (selectedModel !== 'qwen2.5-7b-instruct') {
             OPENAI_API_KEY = apiKeyInput.value.trim();
             if (!OPENAI_API_KEY) {
                 alert('请先输入API密钥');
@@ -197,7 +197,7 @@ function addMessageToChat(sender, message) {
 }
 
 async function callOpenAIAPI(message) {
-    const INSTRUCTION = "你是一个有非常有用的助手, 精通各种知识. 下是你的一些设定: 你是由Evan ZUO部署咋在他个人网站的千问2.5-3b-instruct模型. 处于礼貌, 你可以欢迎使用者来到Evan ZUO的个人网站[https://personal-web-nu-eight.vercel.app/]并帮助使用者回答关于Evan ZUO的问题或者其他帮助";
+    const INSTRUCTION = "你是一个有非常有用的助手, 精通各种知识. 下是你的一些设定: 你是由Evan ZUO部署咋在他个人网站的千问2.5-7b-instruct模型. 处于礼貌, 你可以欢迎使用者来到Evan ZUO的个人网站[https://personal-web-nu-eight.vercel.app/]并帮助使用者回答关于Evan ZUO的问题或者其他帮助";
     try {
         const selectedModel = modelSelect.value;
         let apiEndpoint = API_ENDPOINT;
@@ -214,7 +214,7 @@ async function callOpenAIAPI(message) {
             temperature: 0.7
         };
 
-        if (selectedModel === 'qwen2.5-3b-instruct') {
+        if (selectedModel === 'qwen2.5-7b-instruct') {
             apiEndpoint = PERSONAL_API_ENDPOINT;
             headers = { 'Content-Type': 'application/json' };
             // 为千问模型构建提示词，包含历史对话
@@ -241,7 +241,7 @@ async function callOpenAIAPI(message) {
 
         let aiResponse = '';
 
-        if (selectedModel === 'qwen2.5-3b-instruct') {
+        if (selectedModel === 'qwen2.5-7b-instruct') {
             // 处理流式响应
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
