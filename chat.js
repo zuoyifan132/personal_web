@@ -156,7 +156,7 @@ function addMessageToChat(sender, message) {
 
     const messageElement = document.createElement('div');
     messageElement.classList.add('message', `${sender}-message`);
-    
+
     // 使用marked解析Markdown(仅对AI消息进行解析)
     if (sender === 'ai') {
         messageElement.innerHTML = marked.parse(message);
@@ -174,12 +174,27 @@ function addMessageToChat(sender, message) {
         messageElement.textContent = message;
     }
 
+    // 创建复制按钮
+    const copyButton = document.createElement('button');
+    copyButton.textContent = '复制';
+    copyButton.classList.add('copy-button');
+    copyButton.addEventListener('click', () => {
+        const textToCopy = messageElement.textContent; // 获取要复制的文本
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            alert('已复制内容！');
+        }).catch(err => {
+            console.error('复制失败:', err);
+        });
+    });
+
     if (sender === 'user') {
         messageContainer.appendChild(messageElement);
+        messageContainer.appendChild(copyButton); // 添加复制按钮
         messageContainer.appendChild(avatar);
     } else {
         messageContainer.appendChild(avatar);
         messageContainer.appendChild(messageElement);
+        messageContainer.appendChild(copyButton); // 添加复制按钮
     }
 
     chatMessages.appendChild(messageContainer);
@@ -208,7 +223,7 @@ async function callOpenAIAPI(message) {
             apiEndpoint = PERSONAL_API_ENDPOINT;
             headers = { 'Content-Type': 'application/json' };
             // 为千问模型构建提示词，包含历史对话
-            let prompt = `系统设���: ${INSTRUCTION}\n`;
+            let prompt = `系统设: ${INSTRUCTION}\n`;
             conversationHistory.forEach(msg => {
                 prompt += `${msg.role === 'user' ? '用户' : 'AI'}: ${msg.content}\n`;
             });
